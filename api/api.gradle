@@ -1,0 +1,100 @@
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+
+dependencies {
+  compile 'joda-time:joda-time:2.3'
+  compile 'com.google.guava:guava:15.0'
+  compile 'org.slf4j:slf4j-api:1.7.5'
+  compile 'ch.qos.logback:logback-core:1.0.13'
+  compile 'ch.qos.logback:logback-classic:1.0.13'
+  compile 'org.springframework:spring-context:4.0.0.RELEASE'
+  testCompile 'junit:junit:4.10'
+}
+
+
+ext.javadocLinks = [
+  "http://docs.oracle.com/javase/7/docs/api/",
+  "http://docs.spring.io/spring/docs/current/javadoc-api/",
+  "http://www.joda.org/joda-time/apidocs/"
+] as String[]
+
+
+jar {
+  baseName = rootProject.name
+  manifest {
+    attributes "Implementation-Title": "tkmtwo-timex", "Implementation-Version":version
+  }
+}
+
+
+javadoc {
+  options.author = true
+  options.header = rootProject.name
+  title = rootProject.name
+  options.links(project.ext.javadocLinks)
+}
+
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      groupId 'com.tkmtwo'
+      artifactId rootProject.name
+      from components.java
+    }
+  }
+  repositories {
+    maven {
+      // change to point to your repo, e.g. http://my.org/repo
+      url "$buildDir/repo"
+      //url "file:///C:/gits/tkmtwo-mvn-repo/release"
+    }
+  }
+}
+
+
+findbugs {
+  //toolVersion = "2.0.1"
+  //sourceSets = [sourceSets.test]
+  ignoreFailures = true
+  reportsDir = file("$project.buildDir/reports/findbugs")
+  effort = "max"
+  reportLevel = "low"
+  //reportLevel = "high"
+  //visitors = ["FindSqlInjection", "SwitchFallthrough"]
+  //omitVisitors = ["FindNonShortCircuit"]
+  //includeFilter = file("$rootProject.projectDir/config/findbugs/includeFilter.xml")
+  //excludeFilter = file("$rootProject.projectDir/config/findbugs/excludeFilter.xml")
+}
+
+
+findbugsMain { 
+  reports { 
+    xml { enabled = false }
+    html { 
+      enabled = true
+      destination "$project.buildDir/reports/findbugs/findbugsMain.html"
+    }
+  }
+}
+
+findbugsTest { 
+  reports { 
+    xml { enabled = false }
+    html { 
+      enabled = true
+      destination "$project.buildDir/reports/findbugs/findbugsTest.html"
+    }
+  }
+}
+
+
+
+checkstyle {
+  configFile = new File(rootDir, "config/checkstyle.xml")
+  sourceSets = [sourceSets.main]
+}
+
