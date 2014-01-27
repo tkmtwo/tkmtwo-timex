@@ -20,6 +20,8 @@ package com.tkmtwo.timex;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -45,8 +47,16 @@ import org.joda.time.format.ISODateTimeFormat;
  */
 public final class DateTimes {
 
-  private static final DateTimeFormatter DTF_BASIC = ISODateTimeFormat.basicDateTimeNoMillis().withZoneUTC();
-  private static final DateTimeFormatter DTF_EXTENDED = ISODateTimeFormat.dateTimeNoMillis().withZoneUTC();
+  private static final DateTimeFormatter DTF_BASIC =
+    ISODateTimeFormat.basicDateTimeNoMillis().withZoneUTC();
+  private static final DateTimeFormatter DTF_EXTENDED =
+    ISODateTimeFormat.dateTimeNoMillis().withZoneUTC();
+  
+  
+  public static final String BASIC_DATETIME_NOMILLIS_SPEC =
+    "\\d{8}T\\d{6}Z";
+  public static final Pattern BASIC_DATETIME_NOMILLIS_PATTERN =
+    Pattern.compile(BASIC_DATETIME_NOMILLIS_SPEC);
 
   public static DateTimeFormatter getFormatter() { return DTF_BASIC; }
   public static DateTimeFormatter getBasicFormatter() { return DTF_BASIC; }
@@ -796,6 +806,61 @@ public final class DateTimes {
 
   }
   
+  
+  
+  
+  
+
+  public static DateTime getDateTime(String s) {
+    return getDateTime(getBasicFormatter(),
+                       BASIC_DATETIME_NOMILLIS_PATTERN,
+                       s);
+  }
+
+
+
+  /**
+   * Describe <code>getDateTime</code> method here.
+   *
+   * @param dtf a <code>DateTimeFormatter</code> value
+   * @param p a <code>Pattern</code> value
+   * @param s a <code>String</code> value
+   * @return a <code>DateTime</code> value
+   */
+  public static DateTime getDateTime(DateTimeFormatter dtf, Pattern p, String s) {
+    List<DateTime> dateTimes = getDateTimes(dtf, p, s);
+    if (dateTimes.isEmpty()) {
+      return null;
+    }
+    return (dateTimes.get(dateTimes.size() - 1));
+  }
+
+
+
+
+
+  public static List<DateTime> getDateTimes(String s) {
+    return getDateTimes(getBasicFormatter(),
+                        BASIC_DATETIME_NOMILLIS_PATTERN,
+                        s);
+  }
+
+
+  public static List<DateTime> getDateTimes(DateTimeFormatter dtf, Pattern p, String s) {
+    List<DateTime> dateTimes = new ArrayList<DateTime>();
+    
+    Matcher m = p.matcher(s);
+    while (m.find()) {
+      dateTimes.add(dtf.parseDateTime(m.group()));
+    }
+    /*
+    for (String dtString : Matchers.findAllMatches(s, p)) {
+      dateTimes.add(dtf.parseDateTime(dtString));
+    }
+    */
+    return dateTimes;
+  }
+
   
   
 }
