@@ -52,6 +52,7 @@ public final class DurationConverter
   
   @Override
   public Duration convert(String s) {
+    logger.debug("Converting '{}' to a Duration.", s);
     checkArgument(!isNullOrEmpty(s), "String may not be empty.");
 
     Long l = null;

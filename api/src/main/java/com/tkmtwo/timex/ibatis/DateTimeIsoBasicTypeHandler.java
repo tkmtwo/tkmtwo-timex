@@ -25,7 +25,9 @@ import java.sql.SQLException;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.MappedJdbcTypes;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.joda.time.DateTime;
 import com.tkmtwo.timex.DateTimes;
@@ -33,24 +35,35 @@ import com.tkmtwo.timex.DateTimes;
 /**
  *
  */
-@MappedJdbcTypes(JdbcType.VARCHAR)
 public class DateTimeIsoBasicTypeHandler
   extends BaseTypeHandler<DateTime> {
-  
+
+  protected final Logger logger = LoggerFactory.getLogger(getClass()); 
+ 
   
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i,
                                   DateTime parameter, JdbcType jdbcType)
     throws SQLException {
     
-    ps.setString(i, DateTimes.printBasic(parameter));
+    String dtString = DateTimes.printBasic(parameter);
+    logger.debug("Executing setNonNullParameter {} -> {}.",
+                 DateTimes.printExtended(parameter),
+                 dtString);
+    ps.setString(i, dtString);
   }
   
   @Override
   public DateTime getNullableResult(ResultSet rs, String columnName)
     throws SQLException {
     
-    return DateTimes.parseBasic(rs.getString(columnName));
+    String dtString = rs.getString(columnName);
+    DateTime dt = DateTimes.parseBasic(dtString);
+    logger.debug("Executing getNullableResult {}s -> {}.",
+                 dtString,
+                 DateTimes.printExtended(dt));
+    return dt;
+
   }
 
 
@@ -58,13 +71,25 @@ public class DateTimeIsoBasicTypeHandler
   public DateTime getNullableResult(ResultSet rs, int columnIndex)
     throws SQLException {
 
-    return DateTimes.parseBasic(rs.getString(columnIndex));
+    String dtString = rs.getString(columnIndex);
+    DateTime dt = DateTimes.parseBasic(dtString);
+    logger.debug("Executing getNullableResult {}s -> {}.",
+                 dtString,
+                 DateTimes.printExtended(dt));
+    return dt;
+
   }
 
   @Override
   public DateTime getNullableResult(CallableStatement cs, int columnIndex)
     throws SQLException {
 
-    return DateTimes.parseBasic(cs.getString(columnIndex));
+    String dtString = cs.getString(columnIndex);
+    DateTime dt = DateTimes.parseBasic(dtString);
+    logger.debug("Executing getNullableResult {}s -> {}.",
+                 dtString,
+                 DateTimes.printExtended(dt));
+    return dt;
+
   }
 }

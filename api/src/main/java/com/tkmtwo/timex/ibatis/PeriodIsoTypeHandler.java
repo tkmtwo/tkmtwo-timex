@@ -27,6 +27,9 @@ import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.joda.time.Period;
 import com.tkmtwo.timex.Periods;
 
@@ -37,13 +40,19 @@ import com.tkmtwo.timex.Periods;
 public class PeriodIsoTypeHandler
   extends BaseTypeHandler<Period> {
   
+  protected final Logger logger = LoggerFactory.getLogger(getClass());
+
   
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i,
                                   Period parameter, JdbcType jdbcType)
     throws SQLException {
-    
-    ps.setString(i, Periods.print(parameter));
+
+    String periodString = Periods.print(parameter);
+    logger.debug("Executing setNonNullParameter on {}, which is {}s.",
+                 Periods.print(parameter),
+                 periodString);
+    ps.setString(i, periodString);
   }
   
   @Override

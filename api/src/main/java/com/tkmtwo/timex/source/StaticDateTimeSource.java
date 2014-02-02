@@ -83,7 +83,7 @@ public class StaticDateTimeSource
   public void afterPropertiesSet() {
     logger.info("Initializing.");
     checkNotNull(getDateTime(), "Need a DateTime.");
-    logger.info("Initialized static DateTime as %s.",
+    logger.info("Initialized static DateTime as {}.",
                 DateTimes.printExtended(getDateTime()));
   }
   

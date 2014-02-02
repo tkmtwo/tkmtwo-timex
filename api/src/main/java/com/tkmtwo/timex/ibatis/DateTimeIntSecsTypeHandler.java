@@ -25,46 +25,73 @@ import java.sql.SQLException;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.MappedJdbcTypes;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.joda.time.DateTime;
 import com.tkmtwo.timex.DateTimes;
 
+
+
 /**
  *
  */
-@MappedJdbcTypes(JdbcType.INTEGER)
 public class DateTimeIntSecsTypeHandler
   extends BaseTypeHandler<DateTime> {
+
+  protected final Logger logger = LoggerFactory.getLogger(getClass());
+
   
   
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i,
                                   DateTime parameter, JdbcType jdbcType)
     throws SQLException {
-    
-    ps.setInt(i, DateTimes.getSecsAsInt(parameter));
+
+    int dtSecs = DateTimes.getSecsAsInt(parameter);
+    logger.debug("Executing setNonNullParameter on {}, which is {}s.",
+                 DateTimes.printExtended(parameter),
+                 String.valueOf(dtSecs));
+    ps.setInt(i, dtSecs);
   }
   
   @Override
   public DateTime getNullableResult(ResultSet rs, String columnName)
     throws SQLException {
     
-    return DateTimes.fromSecs(rs.getInt(columnName));
+    int dtSecs = rs.getInt(columnName);
+    DateTime dt = DateTimes.fromSecs(dtSecs);
+    logger.debug("Executing getNullableResult {}s -> {}.",
+                 String.valueOf(dtSecs),
+                 DateTimes.printExtended(dt));
+    return dt;
   }
 
 
   @Override
   public DateTime getNullableResult(ResultSet rs, int columnIndex)
     throws SQLException {
+    
+    int dtSecs = rs.getInt(columnIndex);
+    DateTime dt = DateTimes.fromSecs(dtSecs);
 
-    return DateTimes.fromSecs(rs.getInt(columnIndex));
+    logger.debug("Executing getNullableResult {}s -> {}.",
+                 String.valueOf(dtSecs),
+                 DateTimes.printExtended(dt));
+    return dt;
   }
 
   @Override
   public DateTime getNullableResult(CallableStatement cs, int columnIndex)
     throws SQLException {
-
-    return DateTimes.fromSecs(cs.getInt(columnIndex));
+    
+    int dtSecs = cs.getInt(columnIndex);
+    DateTime dt = DateTimes.fromSecs(dtSecs);
+    
+    logger.debug("Executing getNullableResult {}s -> {}.",
+                 String.valueOf(dtSecs),
+                 DateTimes.printExtended(dt));
+    return dt;
   }
 }

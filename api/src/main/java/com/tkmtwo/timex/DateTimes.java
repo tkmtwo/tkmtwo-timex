@@ -285,7 +285,7 @@ public final class DateTimes {
    */
   public static long getSecsAsLong(ReadableInstant rt) {
     if (rt == null) {
-      throw new IllegalArgumentException("Can not get seoncs for null DateTime.");
+      throw new IllegalArgumentException("Can not get seconds for null DateTime.");
     }
     return rt.getMillis() / 1000L;
   }

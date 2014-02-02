@@ -25,32 +25,46 @@ import java.sql.SQLException;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.MappedJdbcTypes;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.joda.time.DateTime;
 import com.tkmtwo.timex.DateTimes;
 
+
 /**
  *
  */
-@MappedJdbcTypes(JdbcType.BIGINT)
 public class DateTimeLongMillisTypeHandler
   extends BaseTypeHandler<DateTime> {
+
+  protected final Logger logger = LoggerFactory.getLogger(getClass());
   
   
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i,
                                   DateTime parameter, JdbcType jdbcType)
     throws SQLException {
-    
+
+    long dtMillis = parameter.getMillis();
+    logger.debug("Executing setNonNullParameter on {}, which is {}ms.",
+                 DateTimes.printExtended(parameter),
+                 String.valueOf(dtMillis));
+
     ps.setLong(i, parameter.getMillis());
   }
   
   @Override
   public DateTime getNullableResult(ResultSet rs, String columnName)
     throws SQLException {
-    
-    return new DateTime(rs.getLong(columnName));
+
+    long dtMillis = rs.getLong(columnName);
+    DateTime dt = new DateTime(dtMillis);
+    logger.debug("Executing getNullableResult {}s -> {}.",
+                 String.valueOf(dtMillis),
+                 DateTimes.printExtended(dt));
+    return dt;
   }
 
 
@@ -58,13 +72,25 @@ public class DateTimeLongMillisTypeHandler
   public DateTime getNullableResult(ResultSet rs, int columnIndex)
     throws SQLException {
 
-    return new DateTime(rs.getLong(columnIndex));
+    long dtMillis = rs.getLong(columnIndex);
+    DateTime dt = new DateTime(dtMillis);
+    logger.debug("Executing getNullableResult {}s -> {}.",
+                 String.valueOf(dtMillis),
+                 DateTimes.printExtended(dt));
+    return dt;
+
   }
 
   @Override
   public DateTime getNullableResult(CallableStatement cs, int columnIndex)
     throws SQLException {
 
-    return new DateTime(cs.getLong(columnIndex));
+    long dtMillis = cs.getLong(columnIndex);
+    DateTime dt = new DateTime(dtMillis);
+    logger.debug("Executing getNullableResult {}s -> {}.",
+                 String.valueOf(dtMillis),
+                 DateTimes.printExtended(dt));
+    return dt;
+
   }
 }

@@ -25,31 +25,44 @@ import java.sql.SQLException;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.MappedJdbcTypes;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.tkmtwo.timex.WallClock;
 
 /**
  *
  */
-@MappedJdbcTypes(JdbcType.INTEGER)
 public class WallClockIntSecsTypeHandler
   extends BaseTypeHandler<WallClock> {
   
+  protected final Logger logger = LoggerFactory.getLogger(getClass()); 
   
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i,
                                   WallClock parameter, JdbcType jdbcType)
     throws SQLException {
     
-    ps.setInt(i, parameter.getSeconds());
+    int wcSecs = parameter.getSeconds();
+    logger.debug("Executing setNonNullParameter on {}, which is {}s.",
+                 parameter.printExtended(),
+                 String.valueOf(wcSecs));
+    ps.setInt(i, wcSecs);
+
   }
   
   @Override
   public WallClock getNullableResult(ResultSet rs, String columnName)
     throws SQLException {
     
-    return WallClock.valueOf(rs.getInt(columnName));
+    int wcSecs = rs.getInt(columnName);
+    WallClock wc = WallClock.valueOf(wcSecs);
+    logger.debug("Executing getNullableResult {}s -> {}.",
+                 String.valueOf(wcSecs),
+                 wc.printExtended());
+    return wc;
+
   }
 
 
@@ -57,13 +70,26 @@ public class WallClockIntSecsTypeHandler
   public WallClock getNullableResult(ResultSet rs, int columnIndex)
     throws SQLException {
 
-    return WallClock.valueOf(rs.getInt(columnIndex));
+    int wcSecs = rs.getInt(columnIndex);
+    WallClock wc = WallClock.valueOf(wcSecs);
+    logger.debug("Executing getNullableResult {}s -> {}.",
+                 String.valueOf(wcSecs),
+                 wc.printExtended());
+    return wc;
+
   }
 
   @Override
   public WallClock getNullableResult(CallableStatement cs, int columnIndex)
     throws SQLException {
 
-    return WallClock.valueOf(cs.getInt(columnIndex));
+
+    int wcSecs = cs.getInt(columnIndex);
+    WallClock wc = WallClock.valueOf(wcSecs);
+    logger.debug("Executing getNullableResult {}s -> {}.",
+                 String.valueOf(wcSecs),
+                 wc.printExtended());
+    return wc;
+
   }
 }

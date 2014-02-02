@@ -25,7 +25,9 @@ import java.sql.SQLException;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.MappedJdbcTypes;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.tkmtwo.timex.WallClock;
 
@@ -34,24 +36,34 @@ import com.tkmtwo.timex.WallClock;
  * the basic format <code>HHMMSS</code>.
  *
  */
-@MappedJdbcTypes(JdbcType.VARCHAR)
 public class WallClockBasicTypeHandler
   extends BaseTypeHandler<WallClock> {
   
+  protected final Logger logger = LoggerFactory.getLogger(getClass());
   
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i,
                                   WallClock parameter, JdbcType jdbcType)
     throws SQLException {
     
-    ps.setString(i, parameter.printBasic());
+    String wcString = parameter.printBasic();
+    logger.debug("Executing setNonNullParameter {} -> {}.",
+                 parameter.printBasic(),
+                 wcString);
+    ps.setString(i, wcString);
+
   }
   
   @Override
   public WallClock getNullableResult(ResultSet rs, String columnName)
     throws SQLException {
     
-    return WallClock.parseBasic(rs.getString(columnName));
+    String wcString = rs.getString(columnName);
+    WallClock wc = WallClock.parseBasic(wcString);
+    logger.debug("Executing getNullableResult {}s -> {}.",
+                 wcString,
+                 wc.printExtended());
+    return wc;
   }
 
 
@@ -59,13 +71,24 @@ public class WallClockBasicTypeHandler
   public WallClock getNullableResult(ResultSet rs, int columnIndex)
     throws SQLException {
 
-    return WallClock.parseBasic(rs.getString(columnIndex));
+    String wcString = rs.getString(columnIndex);
+    WallClock wc = WallClock.parseBasic(wcString);
+    logger.debug("Executing getNullableResult {}s -> {}.",
+                 wcString,
+                 wc.printExtended());
+    return wc;
+
   }
 
   @Override
   public WallClock getNullableResult(CallableStatement cs, int columnIndex)
     throws SQLException {
 
-    return WallClock.parseBasic(cs.getString(columnIndex));
+    String wcString = cs.getString(columnIndex);
+    WallClock wc = WallClock.parseBasic(wcString);
+    logger.debug("Executing getNullableResult {}s -> {}.",
+                 wcString,
+                 wc.printExtended());
+    return wc;
   }
 }
