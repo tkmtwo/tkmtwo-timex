@@ -48,7 +48,7 @@ public class DateTimeLongMillisTypeHandler
     throws SQLException {
 
     long dtMillis = parameter.getMillis();
-    logger.debug("Executing setNonNullParameter on {}, which is {}ms.",
+    logger.debug("Setting non-null DateTime parameter {} to {}.",
                  DateTimes.printExtended(parameter),
                  String.valueOf(dtMillis));
 
@@ -60,10 +60,20 @@ public class DateTimeLongMillisTypeHandler
     throws SQLException {
 
     long dtMillis = rs.getLong(columnName);
-    DateTime dt = new DateTime(dtMillis);
-    logger.debug("Executing getNullableResult {}s -> {}.",
-                 String.valueOf(dtMillis),
-                 DateTimes.printExtended(dt));
+    DateTime dt = null;
+    
+    if (rs.wasNull()) {
+      logger.debug("ResultSet column {} returned {}, but the value was NULL.",
+                   columnName,
+                   String.valueOf(dtMillis));
+    } else {
+      dt = new DateTime(dtMillis);
+      logger.debug("ResultSet column {} returned {}, returning {}.",
+                   columnName,
+                   String.valueOf(dtMillis),
+                   DateTimes.printExtended(dt));
+    }
+    
     return dt;
   }
 
@@ -73,12 +83,21 @@ public class DateTimeLongMillisTypeHandler
     throws SQLException {
 
     long dtMillis = rs.getLong(columnIndex);
-    DateTime dt = new DateTime(dtMillis);
-    logger.debug("Executing getNullableResult {}s -> {}.",
-                 String.valueOf(dtMillis),
-                 DateTimes.printExtended(dt));
-    return dt;
+    DateTime dt = null;
+    
+    if (rs.wasNull()) {
+      logger.debug("ResultSet column {} eturned {}, but the value was NULL.",
+                   String.valueOf(columnIndex),
+                   String.valueOf(dtMillis));
+    } else {
+      dt = new DateTime(dtMillis);
+      logger.debug("ResultSet column {} returned {}, returning {}.",
+                   String.valueOf(columnIndex),
+                   String.valueOf(dtMillis),
+                   DateTimes.printExtended(dt));
+    }
 
+    return dt;
   }
 
   @Override
@@ -86,11 +105,22 @@ public class DateTimeLongMillisTypeHandler
     throws SQLException {
 
     long dtMillis = cs.getLong(columnIndex);
-    DateTime dt = new DateTime(dtMillis);
-    logger.debug("Executing getNullableResult {}s -> {}.",
-                 String.valueOf(dtMillis),
-                 DateTimes.printExtended(dt));
+    DateTime dt = null;
+    
+    if (cs.wasNull()) {
+      logger.debug("CallableStatement column {} returned {}, but the value was NULL.",
+                   String.valueOf(columnIndex),
+                   String.valueOf(dtMillis));
+    } else {
+      dt = new DateTime(dtMillis);
+      logger.debug("CallableStatement column {} returned {}, returning {}.",
+                   String.valueOf(columnIndex),
+                   String.valueOf(dtMillis),
+                   DateTimes.printExtended(dt));
+    }
+    
     return dt;
-
   }
+  
+  
 }

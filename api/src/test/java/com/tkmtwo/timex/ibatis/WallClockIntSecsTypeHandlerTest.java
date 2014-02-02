@@ -53,7 +53,7 @@ public class WallClockIntSecsTypeHandlerTest
   public void shouldGetNullResultFromResultSet()
     throws Exception {
 
-    when(rs.getInt("column")).thenReturn(wallClockSecs);
+    when(rs.getInt("column")).thenReturn(0);
     when(rs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(rs, "column"));
   }
@@ -68,7 +68,7 @@ public class WallClockIntSecsTypeHandlerTest
 
   @Test
   public void shouldGetNullResultFromCallableStatement() throws Exception {
-    when(cs.getInt(1)).thenReturn(wallClockSecs);
+    when(cs.getInt(1)).thenReturn(0);
     when(cs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
   }

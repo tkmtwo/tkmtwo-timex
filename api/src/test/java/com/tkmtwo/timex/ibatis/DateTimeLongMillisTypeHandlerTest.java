@@ -53,7 +53,7 @@ public class DateTimeLongMillisTypeHandlerTest
   public void shouldGetNullResultFromResultSet()
     throws Exception {
 
-    when(rs.getLong("column")).thenReturn(dateTimeMillis);
+    when(rs.getLong("column")).thenReturn(0L);
     when(rs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(rs, "column"));
   }
@@ -68,7 +68,7 @@ public class DateTimeLongMillisTypeHandlerTest
 
   @Test
   public void shouldGetNullResultFromCallableStatement() throws Exception {
-    when(cs.getLong(1)).thenReturn(dateTimeMillis);
+    when(cs.getLong(1)).thenReturn(0L);
     when(cs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
   }

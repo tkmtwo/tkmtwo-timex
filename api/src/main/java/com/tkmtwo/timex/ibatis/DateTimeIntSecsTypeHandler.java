@@ -50,7 +50,7 @@ public class DateTimeIntSecsTypeHandler
     throws SQLException {
 
     int dtSecs = DateTimes.getSecsAsInt(parameter);
-    logger.debug("Executing setNonNullParameter on {}, which is {}s.",
+    logger.debug("Setting non-null DateTime parameter {} to {}.",
                  DateTimes.printExtended(parameter),
                  String.valueOf(dtSecs));
     ps.setInt(i, dtSecs);
@@ -59,12 +59,21 @@ public class DateTimeIntSecsTypeHandler
   @Override
   public DateTime getNullableResult(ResultSet rs, String columnName)
     throws SQLException {
-    
+
     int dtSecs = rs.getInt(columnName);
-    DateTime dt = DateTimes.fromSecs(dtSecs);
-    logger.debug("Executing getNullableResult {}s -> {}.",
-                 String.valueOf(dtSecs),
-                 DateTimes.printExtended(dt));
+    DateTime dt = null;
+    
+    if (rs.wasNull()) {
+      logger.debug("ResultSet column {} returned {}, but the value was NULL.",
+                   columnName,
+                   String.valueOf(dtSecs));
+    } else {
+      dt = DateTimes.fromSecs(dtSecs);
+      logger.debug("ResultSet column {} returned {}, returning {}.",
+                   columnName,
+                   String.valueOf(dtSecs),
+                   DateTimes.printExtended(dt));
+    }
     return dt;
   }
 
@@ -74,11 +83,19 @@ public class DateTimeIntSecsTypeHandler
     throws SQLException {
     
     int dtSecs = rs.getInt(columnIndex);
-    DateTime dt = DateTimes.fromSecs(dtSecs);
-
-    logger.debug("Executing getNullableResult {}s -> {}.",
-                 String.valueOf(dtSecs),
-                 DateTimes.printExtended(dt));
+    DateTime dt = null;
+    
+    if (rs.wasNull()) {
+      logger.debug("ResultSet column {} returned {}, but the value was NULL.",
+                   String.valueOf(columnIndex),
+                   String.valueOf(dtSecs));
+    } else {
+      dt = DateTimes.fromSecs(dtSecs);
+      logger.debug("ResultSet column {} returned {}, returning {}.",
+                   String.valueOf(columnIndex),
+                   String.valueOf(dtSecs),
+                   DateTimes.printExtended(dt));
+    }
     return dt;
   }
 
@@ -87,11 +104,19 @@ public class DateTimeIntSecsTypeHandler
     throws SQLException {
     
     int dtSecs = cs.getInt(columnIndex);
-    DateTime dt = DateTimes.fromSecs(dtSecs);
+    DateTime dt = null;
     
-    logger.debug("Executing getNullableResult {}s -> {}.",
-                 String.valueOf(dtSecs),
-                 DateTimes.printExtended(dt));
+    if (cs.wasNull()) {
+      logger.debug("CallableStatement column {} returned {}, but the value was NULL.",
+                   String.valueOf(columnIndex),
+                   String.valueOf(dtSecs));
+    } else {
+      dt = DateTimes.fromSecs(dtSecs);
+      logger.debug("CallableStatement column {} returned {}, returning {}.",
+                   String.valueOf(columnIndex),
+                   String.valueOf(dtSecs),
+                   DateTimes.printExtended(dt));
+    }
     return dt;
   }
 }

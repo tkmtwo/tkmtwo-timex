@@ -53,7 +53,7 @@ public class DateTimeIntSecsTypeHandlerTest
   public void shouldGetNullResultFromResultSet()
     throws Exception {
 
-    when(rs.getInt("column")).thenReturn(dateTimeSecs);
+    when(rs.getInt("column")).thenReturn(0);
     when(rs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(rs, "column"));
   }
@@ -68,7 +68,7 @@ public class DateTimeIntSecsTypeHandlerTest
 
   @Test
   public void shouldGetNullResultFromCallableStatement() throws Exception {
-    when(cs.getInt(1)).thenReturn(dateTimeSecs);
+    when(cs.getInt(1)).thenReturn(0);
     when(cs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
   }

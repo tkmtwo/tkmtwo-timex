@@ -56,7 +56,7 @@ public class PeriodIsoTypeHandlerTest
   public void shouldGetNullResultFromResultSet()
     throws Exception {
 
-    when(rs.getString("column")).thenReturn(periodString);
+    when(rs.getString("column")).thenReturn((String) null);
     when(rs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(rs, "column"));
   }
@@ -71,7 +71,7 @@ public class PeriodIsoTypeHandlerTest
 
   @Test
   public void shouldGetNullResultFromCallableStatement() throws Exception {
-    when(cs.getString(1)).thenReturn(periodString);
+    when(cs.getString(1)).thenReturn((String) null);
     when(cs.wasNull()).thenReturn(true);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
   }

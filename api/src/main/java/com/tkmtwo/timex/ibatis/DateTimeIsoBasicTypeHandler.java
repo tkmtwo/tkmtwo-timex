@@ -47,7 +47,7 @@ public class DateTimeIsoBasicTypeHandler
     throws SQLException {
     
     String dtString = DateTimes.printBasic(parameter);
-    logger.debug("Executing setNonNullParameter {} -> {}.",
+    logger.debug("Setting non-null DateTime parameter {} to {}.",
                  DateTimes.printExtended(parameter),
                  dtString);
     ps.setString(i, dtString);
@@ -58,12 +58,21 @@ public class DateTimeIsoBasicTypeHandler
     throws SQLException {
     
     String dtString = rs.getString(columnName);
-    DateTime dt = DateTimes.parseBasic(dtString);
-    logger.debug("Executing getNullableResult {}s -> {}.",
-                 dtString,
-                 DateTimes.printExtended(dt));
+    DateTime dt = null;
+    
+    if (rs.wasNull()) {
+      logger.debug("ResultSet column {} returned {}, but the value was NULL.",
+                   columnName,
+                   dtString);
+    } else {
+      dt = DateTimes.parseBasic(dtString);
+      logger.debug("ResultSet column {} returned {}, returning {}.",
+                   columnName,
+                   dtString,
+                   DateTimes.printExtended(dt));
+    }
+    
     return dt;
-
   }
 
 
@@ -72,12 +81,21 @@ public class DateTimeIsoBasicTypeHandler
     throws SQLException {
 
     String dtString = rs.getString(columnIndex);
-    DateTime dt = DateTimes.parseBasic(dtString);
-    logger.debug("Executing getNullableResult {}s -> {}.",
-                 dtString,
-                 DateTimes.printExtended(dt));
+    DateTime dt = null;
+    
+    if (rs.wasNull()) {
+      logger.debug("ResultSet column {} returned {}, but the value was NULL.",
+                   String.valueOf(columnIndex),
+                   dtString);
+    } else {
+      dt = DateTimes.parseBasic(dtString);
+      logger.debug("ResultSet column {} returned {}, returning {}.",
+                   String.valueOf(columnIndex),
+                   dtString,
+                   DateTimes.printExtended(dt));
+    }
+    
     return dt;
-
   }
 
   @Override
@@ -85,11 +103,21 @@ public class DateTimeIsoBasicTypeHandler
     throws SQLException {
 
     String dtString = cs.getString(columnIndex);
-    DateTime dt = DateTimes.parseBasic(dtString);
-    logger.debug("Executing getNullableResult {}s -> {}.",
-                 dtString,
-                 DateTimes.printExtended(dt));
+    DateTime dt = null;
+    
+    if (cs.wasNull()) {
+      logger.debug("CallableStatement column {} returned {}, but the value was NULL.",
+                   String.valueOf(columnIndex),
+                   dtString);
+    } else {
+      dt = DateTimes.parseBasic(dtString);
+      logger.debug("CallableStatement column {} returned {}, returning {}.",
+                   String.valueOf(columnIndex),
+                   dtString,
+                   DateTimes.printExtended(dt));
+    }
+    
     return dt;
-
   }
+  
 }

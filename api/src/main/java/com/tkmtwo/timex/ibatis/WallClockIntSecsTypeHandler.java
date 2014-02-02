@@ -45,7 +45,7 @@ public class WallClockIntSecsTypeHandler
     throws SQLException {
     
     int wcSecs = parameter.getSeconds();
-    logger.debug("Executing setNonNullParameter on {}, which is {}s.",
+    logger.debug("Setting non-null WallClock parameter {} to {}.",
                  parameter.printExtended(),
                  String.valueOf(wcSecs));
     ps.setInt(i, wcSecs);
@@ -57,12 +57,21 @@ public class WallClockIntSecsTypeHandler
     throws SQLException {
     
     int wcSecs = rs.getInt(columnName);
-    WallClock wc = WallClock.valueOf(wcSecs);
-    logger.debug("Executing getNullableResult {}s -> {}.",
-                 String.valueOf(wcSecs),
-                 wc.printExtended());
+    WallClock wc = null;
+    
+    if (rs.wasNull()) {
+      logger.debug("ResultSet column {} returned {}, but the value was NULL.",
+                   columnName,
+                   String.valueOf(wcSecs));
+    } else {
+      wc = WallClock.valueOf(wcSecs);
+      logger.debug("ResultSet column {} returned {}, returning {}.",
+                   columnName,
+                   String.valueOf(wcSecs),
+                   wc.printExtended());
+    }
+    
     return wc;
-
   }
 
 
@@ -71,25 +80,43 @@ public class WallClockIntSecsTypeHandler
     throws SQLException {
 
     int wcSecs = rs.getInt(columnIndex);
-    WallClock wc = WallClock.valueOf(wcSecs);
-    logger.debug("Executing getNullableResult {}s -> {}.",
-                 String.valueOf(wcSecs),
-                 wc.printExtended());
+    WallClock wc = null;
+    
+    if (rs.wasNull()) {
+      logger.debug("ResultSet column {} returned {}, but the value was NULL.",
+                   String.valueOf(columnIndex),
+                   String.valueOf(wcSecs));
+    } else {
+      wc = WallClock.valueOf(wcSecs);
+      logger.debug("ResultSet column {} returned {}, returning {}.",
+                   String.valueOf(columnIndex),
+                   String.valueOf(wcSecs),
+                   wc.printExtended());
+    }
+    
     return wc;
-
   }
 
   @Override
   public WallClock getNullableResult(CallableStatement cs, int columnIndex)
     throws SQLException {
 
-
     int wcSecs = cs.getInt(columnIndex);
-    WallClock wc = WallClock.valueOf(wcSecs);
-    logger.debug("Executing getNullableResult {}s -> {}.",
-                 String.valueOf(wcSecs),
-                 wc.printExtended());
+    WallClock wc = null;
+    
+    if (cs.wasNull()) {
+      logger.debug("CallableStatement column {} returned {}, but the value was NULL.",
+                   String.valueOf(columnIndex),
+                   String.valueOf(wcSecs));
+    } else {
+      wc = WallClock.valueOf(wcSecs);
+      logger.debug("CallableStatement column {} returned {}, returning {}.",
+                   String.valueOf(columnIndex),
+                   String.valueOf(wcSecs),
+                   wc.printExtended());
+    }
+    
     return wc;
-
   }
+  
 }

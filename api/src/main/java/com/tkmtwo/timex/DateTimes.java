@@ -110,28 +110,10 @@ public final class DateTimes {
    * @return a String value
    */
   public static String printBasic(ReadableInstant ri) {
+    checkNotNull(ri, "Input instant is null.");
     return DTF_BASIC.print(ri);
   }
 
-  /**
-   * Print the Interval in ISO basic format with no milliseconds
-   * in the UTC time zone.
-   *
-   * The format is START/END with a slash in between.
-   *
-   * This is a good format to use for human-readable applications
-   * like error messages or application logs.
-   *
-   * @param i an Interval value
-   * @return a String value
-   */
-  public static String printBasic(Interval i) {
-    return
-      DTF_BASIC.print(i.getStart())
-      + "/"
-      + DTF_BASIC.print(i.getEnd());
-    
-  }
 
   /**
    * Parse the DateTime from the ISO basic format with no milliseconds
@@ -141,6 +123,7 @@ public final class DateTimes {
    * @return a DateTime value
    */
   public static DateTime parseBasic(String s) {
+    checkNotNull(s, "Input string is null.");
     return DTF_BASIC.parseDateTime(s);
   }
 
@@ -159,32 +142,12 @@ public final class DateTimes {
    * @return a String value
    */
   public static String printExtended(ReadableInstant ri) {
+    checkNotNull(ri, "Input instant is null.");
     return DTF_EXTENDED.print(ri);
   }
   
   
   
-  /**
-   * Print the Interval in ISO extended format with no milliseconds
-   * in the UTC time zone.
-   *
-   * The format is START/END with a slash in between.
-   *
-   * This is a good format to use for human-readable applications
-   * like error messages or application logs.
-   *
-   * @param i an Interval value
-   * @return a String value
-   */
-  public static String printExtended(Interval i) {
-    return
-      DTF_EXTENDED.print(i.getStart())
-      + "/"
-      + DTF_EXTENDED.print(i.getEnd());
-    
-  }
-
-
 
   /**
    * Parse the DateTime from the ISO extended format with no milliseconds
@@ -194,6 +157,7 @@ public final class DateTimes {
    * @return a DateTime value
    */
   public static DateTime parseExtended(String s) {
+    checkNotNull(s, "Input string is null.");
     return DTF_EXTENDED.parseDateTime(s);
   }
 

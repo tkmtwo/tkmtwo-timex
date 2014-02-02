@@ -62,6 +62,8 @@ public final class Intervals {
    * @return a String value
    */
   public static String printBasic(Interval i) {
+
+    checkNotNull(i, "Input interval is null.");
     return
       DateTimes.getBasicFormatter().print(i.getStart())
       + "/"
@@ -86,6 +88,8 @@ public final class Intervals {
    * @return a String value
    */
   public static String printExtended(Interval i) {
+
+    checkNotNull(i, "Input interval is null.");
     return
       DateTimes.getExtendedFormatter().print(i.getStart())
       + "/"

@@ -49,7 +49,7 @@ public class PeriodIsoTypeHandler
     throws SQLException {
 
     String periodString = Periods.print(parameter);
-    logger.debug("Executing setNonNullParameter on {}, which is {}s.",
+    logger.debug("Setting non-null Period parameter {} to {}.",
                  Periods.print(parameter),
                  periodString);
     ps.setString(i, periodString);
@@ -59,7 +59,22 @@ public class PeriodIsoTypeHandler
   public Period getNullableResult(ResultSet rs, String columnName)
     throws SQLException {
     
-    return Periods.parse(rs.getString(columnName));
+    String periodString = rs.getString(columnName);
+    Period period = null;
+    
+    if (rs.wasNull()) {
+      logger.debug("ResultSet column {} returned {}, but the value was NULL.",
+                   columnName,
+                   periodString);
+    } else {
+      period = Periods.parse(periodString);
+      logger.debug("ResultSet column {} returned {}, returning {}.",
+                   columnName,
+                   periodString,
+                   Periods.print(period));
+    }
+    
+    return period;
   }
 
 
@@ -67,13 +82,44 @@ public class PeriodIsoTypeHandler
   public Period getNullableResult(ResultSet rs, int columnIndex)
     throws SQLException {
 
-    return Periods.parse(rs.getString(columnIndex));
+    String periodString = rs.getString(columnIndex);
+    Period period = null;
+    
+    if (rs.wasNull()) {
+      logger.debug("ResultSet column {} returned {}, but the value was NULL.",
+                   String.valueOf(columnIndex),
+                   periodString);
+    } else {
+      period = Periods.parse(periodString);
+      logger.debug("ResultSet column {} returned {}, returning {}.",
+                   String.valueOf(columnIndex),
+                   periodString,
+                   Periods.print(period));
+    }
+    
+    return period;
   }
 
   @Override
   public Period getNullableResult(CallableStatement cs, int columnIndex)
     throws SQLException {
 
-    return Periods.parse(cs.getString(columnIndex));
+    String periodString = cs.getString(columnIndex);
+    Period period = null;
+    
+    if (cs.wasNull()) {
+      logger.debug("CallableStatement column {} returned {}, but the value was NULL.",
+                   String.valueOf(columnIndex),
+                   periodString);
+    } else {
+      period = Periods.parse(periodString);
+      logger.debug("CallableStatement column {} returned {}, returning {}.",
+                   String.valueOf(columnIndex),
+                   periodString,
+                   Periods.print(period));
+    }
+    
+    return period;
   }
+  
 }
