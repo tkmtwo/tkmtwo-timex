@@ -1,116 +1,41 @@
 
+
 apply plugin: 'java'
 apply plugin: 'maven'
-apply plugin: 'maven-publish'
-apply plugin: 'checkstyle'
-apply plugin: 'findbugs'
+
+apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/dependency-versions.gradle'
+apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/configurations-exclude-jcl-log4j.gradle'
+apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/jar-api.gradle'
+apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/javadoc.gradle'
+apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/compilejava-lint.gradle'
+
+apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/checkstyle.gradle'
+apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/findbugs.gradle'
 
 dependencies {
-  compile 'joda-time:joda-time:2.3'
-  compile 'com.google.guava:guava:15.0'
-  compile 'org.mybatis:mybatis:3.2.4'
-  compile 'org.slf4j:slf4j-api:1.7.5'
-  compile 'ch.qos.logback:logback-core:1.0.13'
-  compile 'ch.qos.logback:logback-classic:1.0.13'
-  compile 'org.springframework:spring-context:4.0.0.RELEASE'
-  testCompile 'junit:junit:4.11'
-  testCompile 'org.mockito:mockito-core:1.9.5'
+  compile "com.google.guava:guava:${guavaVersion}"
+  compile "joda-time:joda-time:${jodaTimeVersion}"
+  compile "org.mybatis:mybatis:${mybatisVersion}"
+  compile "org.slf4j:slf4j-api:${slf4jVersion}"
+  compile "org.springframework:spring-context:${springFrameworkVersion}"
 
-}
+  runtime "ch.qos.logback:logback-classic:${logbackVersion}"
+  runtime "ch.qos.logback:logback-core:${logbackVersion}"
+  runtime "org.slf4j:jcl-over-slf4j:${slf4jVersion}"
+  runtime "org.slf4j:jul-to-slf4j:${slf4jVersion}"
+  runtime "org.slf4j:log4j-over-slf4j:${slf4jVersion}"
 
-
-ext.javadocLinks = [
-  "http://docs.oracle.com/javase/7/docs/api/",
-  "http://docs.spring.io/spring/docs/current/javadoc-api/",
-  "http://www.joda.org/joda-time/apidocs/"
-] as String[]
+  testCompile "junit:junit:${junitVersion}"
+  testCompile "org.mockito:mockito-core:${mockitoVersion}"
 
 
-jar {
-  baseName = rootProject.name
-  manifest {
-    attributes "Implementation-Title": "tkmtwo-timex", "Implementation-Version":version
-  }
-}
-
-
-javadoc {
-  options.author = true
-  options.header = rootProject.name
-  title = rootProject.name
-  options.links(project.ext.javadocLinks)
 }
 
 uploadArchives {
   repositories {
     mavenDeployer {
-      //repository(url: "file://localhost/tmp/myRepo/")
       repository(url: "file://$buildDir/repo")
       //repository(url: "file:///C:/gits/tkmtwo-mvn-repo/release")
-
     }
   }
 }
-
-/*
-publishing {
-  publications {
-    mavenJava(MavenPublication) {
-      groupId 'com.tkmtwo'
-      artifactId rootProject.name
-      version project.version
-      from components.java
-    }
-  }
-  repositories {
-    maven {
-      // change to point to your repo, e.g. http://my.org/repo
-      url "$buildDir/repo"
-      //url "file:///C:/gits/tkmtwo-mvn-repo/release"
-    }
-  }
-}
-*/
-
-findbugs {
-  //toolVersion = "2.0.1"
-  //sourceSets = [sourceSets.test]
-  ignoreFailures = true
-  reportsDir = file("$project.buildDir/reports/findbugs")
-  effort = "max"
-  reportLevel = "low"
-  //reportLevel = "high"
-  //visitors = ["FindSqlInjection", "SwitchFallthrough"]
-  //omitVisitors = ["FindNonShortCircuit"]
-  //includeFilter = file("$rootProject.projectDir/config/findbugs/includeFilter.xml")
-  //excludeFilter = file("$rootProject.projectDir/config/findbugs/excludeFilter.xml")
-}
-
-
-findbugsMain { 
-  reports { 
-    xml { enabled = false }
-    html { 
-      enabled = true
-      destination "$project.buildDir/reports/findbugs/findbugsMain.html"
-    }
-  }
-}
-
-findbugsTest { 
-  reports { 
-    xml { enabled = false }
-    html { 
-      enabled = true
-      destination "$project.buildDir/reports/findbugs/findbugsTest.html"
-    }
-  }
-}
-
-
-
-checkstyle {
-  configFile = new File(rootDir, "config/checkstyle.xml")
-  sourceSets = [sourceSets.main]
-}
-
