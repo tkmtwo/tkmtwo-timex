@@ -110,7 +110,8 @@ public final class DateTimes {
    * @return a String value
    */
   public static String printBasic(ReadableInstant ri) {
-    checkNotNull(ri, "Input instant is null.");
+    //checkNotNull(ri, "Input instant is null.");
+    if (ri == null) { return ""; }
     return DTF_BASIC.print(ri);
   }
 
@@ -142,7 +143,8 @@ public final class DateTimes {
    * @return a String value
    */
   public static String printExtended(ReadableInstant ri) {
-    checkNotNull(ri, "Input instant is null.");
+    //checkNotNull(ri, "Input instant is null.");
+    if (ri == null) { return ""; }
     return DTF_EXTENDED.print(ri);
   }
   
