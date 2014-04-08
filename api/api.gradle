@@ -14,6 +14,7 @@ apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/findbugs.g
 
 dependencies {
   compile "com.google.guava:guava:${guavaVersion}"
+  compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
   compile "joda-time:joda-time:${jodaTimeVersion}"
   compile "org.mybatis:mybatis:${mybatisVersion}"
   compile "org.slf4j:slf4j-api:${slf4jVersion}"
@@ -24,6 +25,7 @@ dependencies {
   runtime "org.slf4j:jcl-over-slf4j:${slf4jVersion}"
   runtime "org.slf4j:jul-to-slf4j:${slf4jVersion}"
   runtime "org.slf4j:log4j-over-slf4j:${slf4jVersion}"
+
 
   testCompile "junit:junit:${junitVersion}"
   testCompile "org.mockito:mockito-core:${mockitoVersion}"
